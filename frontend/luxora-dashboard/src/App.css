@@ -1,0 +1,64 @@
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+html, body {
+  overflow-y: scroll;
+}
+
+/* 1. The main wrapper should allow the page to be scrollable */
+/* Update these specific blocks in your CSS */
+
+.dashboard-wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh; /* Changed from 'height' to 'min-height' */
+  background-color: #000;
+}
+
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  /* Remove 'height: 100vh' here if it's causing issues */
+  overflow-y: visible; 
+  padding: 20px;
+  min-width: 0; /* Prevents flex children from pushing width */
+}
+
+/* 3. Ensure no parent of the AIPanel has overflow: hidden */
+.charts-grid, .logged-users-section {
+  overflow: visible; 
+}

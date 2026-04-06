@@ -1,0 +1,59 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Store Admin" as Admin
+actor "Inventory Manager" as Manager
+actor "AI Engine" as AI <<System>>
+actor "Database" as DB <<System>>
+
+rectangle "LUXORA Dashboard Ecosystem" {
+  
+  '--- Authentication Group ---
+  (Login) as UC1
+  (Update Profile) as UC2
+  (Manage User Roles) as UC3
+  
+  '--- Inventory Group ---
+  (Add/Edit Products) as UC4
+  (Monitor Stock Levels) as UC5
+  (Manage Categories) as UC6
+  (Low Stock Alerts) as UC7
+  
+  '--- Sales & Orders Group ---
+  (View Real-time Orders) as UC8
+  (Update Order Status) as UC9
+  (Generate Sales Invoice) as UC10
+  
+  '--- AI & Analytics Group ---
+  (View AI Sales Forecast) as UC11
+  (Analyze Olist Dataset) as UC12
+  (Predict Trending Products) as UC13
+  (Export Performance Reports) as UC14
+
+  '--- Relationships ---
+  UC1 <.. UC2 : <<extend>>
+  UC11 ..> UC12 : <<include>>
+  UC11 ..> UC13 : <<include>>
+  UC5 <.. UC7 : <<extend>>
+}
+
+'--- Admin Connections ---
+Admin --> UC1
+Admin --> UC3
+Admin --> UC8
+Admin --> UC11
+Admin --> UC14
+
+'--- Manager Connections ---
+Manager --> UC1
+Manager --> UC4
+Manager --> UC5
+Manager --> UC6
+Manager --> UC9
+
+'--- System Connections ---
+UC12 -- DB
+UC13 -- AI
+UC7 -- AI
+@enduml
