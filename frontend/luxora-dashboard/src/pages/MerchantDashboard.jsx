@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import StatCard from "../components/StatCard";
 import SalesChart from "../components/SalesChart";
@@ -11,6 +10,7 @@ import LoggedInUsers from "./LoggedInUsers";
 import AIPanel from "./AIPanel";
 import LuxoraChat from "../components/ChatBot";
 import "../styles/dashboard.css";
+ import Sidebar from "../components/Sidebar";
 import * as XLSX from 'xlsx';
 
 export default function MerchantDashboard() {
@@ -18,7 +18,6 @@ export default function MerchantDashboard() {
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Helper function to process inventory logic
   const processAlerts = (data) => {
     const newAlerts = [];
     data.forEach(item => {
@@ -41,36 +40,38 @@ export default function MerchantDashboard() {
     setAlerts(newAlerts);
   };
 
-  // Helper for Millions formatting
   const formatRevenue = (val) => `₹${(val / 1000000).toFixed(1)}M`;
 
-  useEffect(() => {
-    setLoading(true);
-    const API_BASE = "http://localhost:8080/api";
+      useEffect(() => {
+        const API_BASE = (import.meta.env.VITE_API_URL || "http://localhost:8080") + "/api";
 
-    // 1. Fetch Stats (The most important part)
-    axios.get(`${API_BASE}/analytics/summary`)
-        .then(res => {
-            console.log("✅ Summary Data:", res.data);
+        const fetchDashboardData = async () => {
+          setLoading(true); 
+          
+          try {
+            const [summaryRes, productsRes] = await Promise.all([
+              axios.get(`${API_BASE}/analytics/summary`),
+              axios.get(`${API_BASE}/analytics/products`)
+            ]);
+
+            console.log("✅ Dashboard Data Sync Successful");
             setStats({
-                revenue: res.data.revenue || 0,
-                orders: res.data.orders || 0,
-                products: res.data.products || 0,
-                customers: res.data.customers || 0
+              revenue: summaryRes.data.revenue || 0,
+              orders: summaryRes.data.orders || 0,
+              products: summaryRes.data.products || 0,
+              customers: summaryRes.data.customers || 0
             });
-        })
-        .catch(err => console.error("❌ Summary failed:", err))
-        .finally(() => setLoading(false)); // Hide the loading spinner once stats are in
+            processAlerts(productsRes.data);
 
-    // 2. Fetch Products (The heavy part)
-    axios.get(`${API_BASE}/analytics/products`)
-        .then(res => {
-            console.log("✅ Products Data received");
-            processAlerts(res.data);
-        })
-        .catch(err => console.error("❌ Products list failed:", err));
-    
-}, []);
+          } catch (err) {
+            console.error("❌ Luxora API Error:", err);
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        fetchDashboardData();
+      }, []); 
   const handleExportReport = () => {
     const workbook = XLSX.utils.book_new();
     

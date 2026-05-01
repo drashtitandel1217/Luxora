@@ -25,7 +25,7 @@ export default function AIChatPage() {
         setIsLoading(true);
 
         try {
-          const response = await axios.post("http://127.0.0.1:8000/chat", { message: input });
+          const response = await axios.post((import.meta.env.VITE_AI_URL || "http://127.0.0.1:8000") + "/chat", { message: input });
           const fullText = response.data.reply;
           
           // Typewriter Logic

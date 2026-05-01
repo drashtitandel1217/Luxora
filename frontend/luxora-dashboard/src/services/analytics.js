@@ -54,7 +54,7 @@ export const getForecast = (data) => {
 
 export const fetchForecast = async () => {
 
- const response = await fetch("http://localhost:8000/forecast");
+ const response = await fetch((import.meta.env.VITE_AI_URL || "http://127.0.0.1:8000") + "/forecast");
 
  const data = await response.json();
 

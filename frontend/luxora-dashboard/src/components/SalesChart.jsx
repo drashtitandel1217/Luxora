@@ -8,7 +8,7 @@ function SalesChart() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/analytics/sales-trend");
+        const response = await axios.get((import.meta.env.VITE_API_URL || "http://localhost:8080") + "/api/analytics/sales-trend");
         
         // Match the keys coming from the new SQL query
         const normalizedData = response.data.map(item => ({

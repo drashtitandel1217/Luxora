@@ -9,7 +9,7 @@ export default function Login({ role }) {
     if (!email || !name) return alert("Please enter email and name");
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/login", {
+      const res = await axios.post((import.meta.env.VITE_AI_URL || "http://127.0.0.1:8000") + "/login", {
         email,
         name,
         role, // "Buyer" or "Seller"

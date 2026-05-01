@@ -1,0 +1,61 @@
+databases:
+  - name: luxora-db
+    databaseName: luxora_db
+    user: luxora_user
+    plan: free
+
+services:
+  - type: web
+    name: luxora-backend
+    env: docker
+    repo: https://github.com/drashtitandel1217/Luxora # Please ensure this repo URL is correct
+    region: oregon
+    plan: free
+    dockerContext: backend/luxora-backend
+    dockerfilePath: backend/luxora-backend/Dockerfile
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: luxora-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: luxora-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: luxora-db
+          property: password
+
+  - type: web
+    name: luxora-ai-service
+    env: python
+    repo: https://github.com/drashtitandel1217/Luxora # Please ensure this repo URL is correct
+    region: oregon
+    plan: free
+    buildCommand: "cd ai-service && pip install -r requirements.txt"
+    startCommand: "cd ai-service && uvicorn main:app --host 0.0.0.0 --port $PORT"
+
+  - type: web
+    name: luxora-frontend
+    env: static
+    repo: https://github.com/drashtitandel1217/Luxora # Please ensure this repo URL is correct
+    region: oregon
+    plan: free
+    buildCommand: "cd frontend/luxora-dashboard && npm install && npm run build"
+    staticPublishPath: "frontend/luxora-dashboard/dist"
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: luxora-backend
+          property: host
+      - key: VITE_AI_URL
+        fromService:
+          type: web
+          name: luxora-ai-service
+          property: host
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

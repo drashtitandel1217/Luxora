@@ -21,7 +21,7 @@ export default function LoggedInUsers() {
   // --- DELETE SPECIFIC USER ---
   const deleteSpecificUser = async (email) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/active-users/${email}`);
+      await axios.delete(`${import.meta.env.VITE_AI_URL || (import.meta.env.VITE_AI_URL || "http://127.0.0.1:8000") + ""}/active-users/${email}`);
       // Remove the specific user from the UI list
       setUsers(prev => prev.filter(user => user.email !== email));
     } catch (err) {
@@ -32,7 +32,7 @@ export default function LoggedInUsers() {
 
   useEffect(() => {
     const fetchUsers = () => {
-      axios.get("http://127.0.0.1:8000/active-users")
+      axios.get((import.meta.env.VITE_AI_URL || "http://127.0.0.1:8000") + "/active-users")
         .then(res => setUsers(res.data))
         .catch(err => console.error("Error fetching users:", err));
     };

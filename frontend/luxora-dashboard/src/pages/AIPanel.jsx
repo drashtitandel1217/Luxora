@@ -7,7 +7,7 @@ export default function AIPanel() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/forecast")
+    axios.get((import.meta.env.VITE_AI_URL || "http://127.0.0.1:8000") + "/forecast")
       .then(res => {
         setData(res.data);
         setLoading(false);

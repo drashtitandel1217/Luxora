@@ -14,7 +14,7 @@ export default function LuxoraChat() {
     setInput("");
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/ai-chat", { message: input });
+      const res = await axios.post((import.meta.env.VITE_AI_URL || "http://127.0.0.1:8000") + "/ai-chat", { message: input });
       setMessages([...newMessages, { text: res.data.response, sender: "ai" }]);
     } catch (err) {
       console.error(err);

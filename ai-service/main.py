@@ -34,7 +34,7 @@ class UserLogin(BaseModel):
     name: str
     role: str
 
-DATA_PATH = '/Users/drashtitandel12/Downloads/olist_orders_dataset.csv'
+DATA_PATH = os.path.join(os.path.dirname(__file__), '../data/olist_orders_dataset.csv')
 orders = pd.read_csv(DATA_PATH)
 
 @app.post("/chat")
@@ -67,13 +67,17 @@ async def chat_with_data(request: Request):
 
         final_prompt = f"System: {system_context}\nUser: {user_query}\nAI:"
         
-        response = llm.invoke(final_prompt)
+        try:
+            response = llm.invoke(final_prompt)
+        except Exception as llm_error:
+            print(f"Ollama not available, returning mock response: {llm_error}")
+            response = "Ollama is currently offline. Here is a simulated response:\n\n- **Total Orders**: 99441\n- **Predicted Growth**: +31.1%\n- **Health & Beauty**: +18% increase expected.\n\n*This is a mock response because the Ollama server is not running.*"
+            
         return {"reply": response}
         
     except Exception as e:
         print(f"CRASH ERROR: {e}")
-        return {"reply": "I encountered a processing error. Please check if Ollama is running."
-        }
+        return {"reply": "I encountered a processing error. Please check if Ollama is running."}
 
 @app.get("/forecast")
 async def get_forecast():
@@ -242,7 +246,7 @@ LUXORA_CATALOG = {
     }
 }
 
-PRODUCTS_DATA_PATH = '/Users/drashtitandel12/Downloads/olist_products_dataset.csv'
+PRODUCTS_DATA_PATH = os.path.join(os.path.dirname(__file__), '../data/olist_products_dataset.csv')
 products_df = pd.read_csv(PRODUCTS_DATA_PATH)
 
 
@@ -339,6 +343,8 @@ async def get_merchant_inventory():
         return []
 
 if __name__ == "__main__":
-    if not os.path.exists("../data/olist_orders_dataset.csv"):
-        print("CRITICAL: Dataset not found! Please check path.")
-    uvicorn.run(app, host="127.0.0.1", port=8000) # is main.py correct?
+    data_path = os.path.join(os.path.dirname(__file__), '../data/olist_orders_dataset.csv')
+    if not os.path.exists(data_path):
+        print(f"CRITICAL: Dataset not found at {data_path}! Please check path.")
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)

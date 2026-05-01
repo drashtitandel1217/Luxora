@@ -17,7 +17,7 @@ function App() {
   useEffect(() => {
     const fetchSystemAlerts = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/forecast");
+        const response = await axios.get((import.meta.env.VITE_AI_URL || "http://127.0.0.1:8000") + "/forecast");
         
         // Transform backend 'insights' into the 'alerts' format used by TopBar
         const formattedAlerts = response.data.insights.map((item, index) => ({

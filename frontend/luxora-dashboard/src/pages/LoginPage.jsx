@@ -40,7 +40,7 @@ export default function LoginPage() {
     try {
       // 2. THIS IS THE KEY: Send to backend
       console.log("Saving user to DB:", userData);
-      await axios.post("http://127.0.0.1:8000/login", userData);
+      await axios.post((import.meta.env.VITE_AI_URL || "http://127.0.0.1:8000") + "/login", userData);
       
       // 3. ONLY navigate after the save is attempted
       if (role === "buyer") {

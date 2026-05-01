@@ -14,15 +14,15 @@ export default function BuyerDashboard() {
     const fetchBuyerData = async () => {
       try {
         // 1. Fetch Dynamic Products from FastAPI
-        const prodRes = await axios.get("http://127.0.0.1:8000/api/products");
+        const prodRes = await axios.get((import.meta.env.VITE_AI_URL || "http://127.0.0.1:8000") + "/api/products");
         setProducts(prodRes.data);
 
         // 2. Fetch Buyer-Specific Notifications
-        const alertRes = await axios.get("http://127.0.0.1:8000/api/buyer/notifications");
+        const alertRes = await axios.get((import.meta.env.VITE_AI_URL || "http://127.0.0.1:8000") + "/api/buyer/notifications");
         setAlerts(alertRes.data.alerts);
 
         // 3. Fetch Active Users count
-        const userRes = await axios.get("http://127.0.0.1:8000/active-users");
+        const userRes = await axios.get((import.meta.env.VITE_AI_URL || "http://127.0.0.1:8000") + "/active-users");
         setUsers(userRes.data);
         
         setIsLoading(false);

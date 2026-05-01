@@ -7,7 +7,7 @@ export default function CategoryChart() {
   const colors = ["#4f46e5", "#7c3aed", "#2563eb", "#3b82f6", "#60a5fa"];
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/analytics/top-categories")
+    axios.get((import.meta.env.VITE_API_URL || "http://localhost:8080") + "/api/analytics/top-categories")
       .then(res => setData(res.data))
       .catch(err => console.error(err));
   }, []);

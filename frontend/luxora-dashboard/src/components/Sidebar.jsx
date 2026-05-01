@@ -10,7 +10,7 @@ export default function Sidebar() {
 
     try {
       if (email) {
-        await axios.post(`http://127.0.0.1:8000/logout?user_email=${email}`);
+        await axios.post(`${import.meta.env.VITE_AI_URL || (import.meta.env.VITE_AI_URL || "http://127.0.0.1:8000") + ""}/logout?user_email=${email}`);
       }
     } catch (err) {
       console.error("Logout failed on server, clearing session anyway.");
